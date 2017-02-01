@@ -1,10 +1,6 @@
-### PARAMETERS - CHANGE TO SUIT
-# We utilize 50% of the cluster cores - you can change this
-coreUtilization <- 0.50
-# change the namenode address
-myNameNode <- "<dns_name_of_head_node>"
-
-
+### PARAMETERS - PLEASE CHANGE -
+myNameNode <- "<dns_name_of_head_node>" # change the namenode address
+coreUtilization <- 0.50 # We utilize 50% of the cluster cores - you can change this
 
 # This function finds the number of nodes and cores in the cluster
 rxGetClusterDetails <- function()
