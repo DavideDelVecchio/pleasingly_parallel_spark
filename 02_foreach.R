@@ -3,6 +3,7 @@
 
 library(foreach)
 library(doParallel)
+library(doRSR)
 
 # Setting number of cores to 4 since this was run on a 4-core machine
 
@@ -19,6 +20,7 @@ results <- foreach(i = 1:nTasks) %dopar% {
     return(model)
 }
 
+stopCluster(cl)
 
 # foreach - Spark ---------------------------------------------------------
 

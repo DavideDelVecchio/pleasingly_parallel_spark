@@ -3,11 +3,12 @@
 n <- 1000
 dirPath <- "timeseriesfolder/"
 
-for(i in 1 : 1000)
+for(i in 1 : n)
 {
     x <- arima.sim(model = list(ar=.8), n = 1000)
     write.csv(data.frame(x),paste0(dirPath,"sku",i,".csv"))
 }
 
 # copy to / in HDFS - you may want to change this location according to your cluster settings
+rxHadoopMakeDir(dirPath)
 rxHadoopCopyFromLocal(dirPath, dirPath)
