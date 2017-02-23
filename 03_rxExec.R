@@ -1,10 +1,8 @@
-
 # function to parallelize -------------------------------------------------
 
-timeSeriesModel <- function(i)
-{
+timeSeriesModel <- function(i) {
     setMKLthreads(1)
-    txt <- RxTextData(paste0("timeseriesfolder/sku", i, ".csv"), delimiter = ",", fileSystem = fileSystemToUse)
+    txt <- RxTextData(paste0(filePath, "sku", i, ".csv"), delimiter = ",", fileSystem = fileSystemToUse)
     x <- rxDataStep(txt)$x
     model <- arima(x, order = c(1, 0, 0))
     return(model)
@@ -15,10 +13,15 @@ timeSeriesModel <- function(i)
 
 rxSetComputeContext("localpar")
 fileSystemToUse <- RxNativeFileSystem()
-results <- rxExec(timeSeriesModel, elemArgs = 1:1000, execObjects = c("fileSystemToUse"))
+filePath <- "timeseriesfolder/"
+results <- rxExec(timeSeriesModel, elemArgs = 1:1000, execObjects = c("fileSystemToUse", "filePath"))
 
 
 # rxExec - Spark ----------------------------------------------------------
 rxSetComputeContext(mySparkCluster)
-fileSystemToUse <- RxHdfsFileSystem()
-results <- rxExec(timeSeriesModel, elemArgs = 1:1000, execObjects = c("fileSystemToUse"))
+fileSystemToUse <- RxHdfsFileSystem(hostName = myNameNode)
+filePath <- "/timeseriesfolder/"
+myChunkSize <- ceiling(nTasks / (mySparkCluster@executorCores * mySparkCluster@numExecutors))
+results <- rxExec(timeSeriesModel, elemArgs = 1:1000, execObjects = c("fileSystemToUse", "filePath"),
+                  taskChunkSize = myChunkSize)
+

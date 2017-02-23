@@ -10,5 +10,4 @@ for(i in 1 : n)
 }
 
 # copy to / in HDFS - you may want to change this location according to your cluster settings
-rxHadoopMakeDir(dirPath)
 rxHadoopCopyFromLocal(dirPath, dirPath)

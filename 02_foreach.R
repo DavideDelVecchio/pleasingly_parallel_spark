@@ -30,7 +30,7 @@ nTasks <- 1000
 myChunkSize <- ceiling(nTasks / (mySparkCluster@executorCores*mySparkCluster@numExecutors))
 results <- foreach(i = 1:nTasks, .options.rsr=list(chunkSize=myChunkSize)) %dopar% {
     setMKLthreads(1)
-    txt <- RxTextData(paste0("timeseriesfolder/sku", i, ".csv"), delimiter = ",", fileSystem = RxHdfsFileSystem())
+    txt <- RxTextData(paste0("/timeseriesfolder/sku", i, ".csv"), delimiter = ",", fileSystem = RxHdfsFileSystem())
     x <- rxDataStep(txt)$x
     model <- arima(x, order = c(1, 0, 0))
     return(model)
